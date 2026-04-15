@@ -7,3 +7,4 @@ def twenty_twenty_four():
     """
     return 2020 + 4
 
+twenty_twenty_four()
