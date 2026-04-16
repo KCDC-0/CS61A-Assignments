@@ -11,7 +11,7 @@ increment = lambda x: x + 1
 
 HW_SOURCE_FILE=__file__
 
-
+from functools import reduce
 def product(n, term):
     """Return the product of the first n terms in a sequence.
 
@@ -32,6 +32,9 @@ def product(n, term):
     162
     """
     "*** YOUR CODE HERE ***"
+
+    assert isinstance(n, int) and n > 0, 'n must be a positive integer'
+    return reduce(mul, (term(i) for i in range(1, n+1)))
 
 
 def accumulate(fuse, start, n, term):
@@ -55,6 +58,10 @@ def accumulate(fuse, start, n, term):
     """
     "*** YOUR CODE HERE ***"
 
+    if n == 0:
+        return start
+    return fuse(start, (reduce(fuse, (term(i) for i in range(1, n+1)))))
+
 
 def summation_using_accumulate(n, term):
     """Returns the sum: term(1) + ... + term(n), using accumulate.
@@ -68,7 +75,7 @@ def summation_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(summation_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(add, 0, n, term)
 
 
 def product_using_accumulate(n, term):
@@ -83,7 +90,7 @@ def product_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(product_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(mul, 1, n, term)
 
 
 def make_repeater(f, n):
@@ -99,5 +106,9 @@ def make_repeater(f, n):
     >>> make_repeater(square, 3)(5) # square(square(square(5)))
     390625
     """
-    "*** YOUR CODE HERE ***"
+    func = f
+    compose = lambda f,g: lambda x: f(g(x))
+    for i in range(n-1):
+        func = compose(func,f)
+    return func
 
