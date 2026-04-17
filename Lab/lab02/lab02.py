@@ -1,3 +1,6 @@
+from doctest import run_docstring_examples
+# run_docstring_examples(composite_identity, globals(), True)
+
 
 def composite_identity(f, g):
     """
@@ -14,6 +17,7 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    return lambda x: f(g(x)) == g(f(x))
 
 
 def sum_digits(y):
@@ -60,6 +64,12 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    def func(n):
+        count = 0
+        for i in range(n):
+            count += int(condition(n, i+1))
+        return count
+    return func
 
 
 def multiple(a, b):
@@ -71,6 +81,11 @@ def multiple(a, b):
     42
     """
     "*** YOUR CODE HERE ***"
+    gcd = 1
+    for i in range(1, min(a, b)//2 + 1):
+        if a % i == 0 and b % i == 0:
+            gcd = i
+    return int((a*b)/gcd)
 
 
 
@@ -101,4 +116,12 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+    def func1(reps):
+        def func2(num):
+            flist = [f1, f2, f3]
+            for i in range(reps):
+                num = flist[i % 3](num)
+            return num
+        return func2
+    return func1
 
