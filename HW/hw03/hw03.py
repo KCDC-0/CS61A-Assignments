@@ -1,5 +1,6 @@
 HW_SOURCE_FILE = __file__
-
+from doctest import run_docstring_examples
+# run_docstring_examples(num_eights, globals(), True)
 
 def num_eights(n):
     """Returns the number of times 8 appears as a digit of n.
@@ -25,6 +26,14 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n // 10 == 0:
+        if n == 8: 
+            return 1
+        return 0
+    if n % 10 == 8:
+        return 1 + num_eights(n//10)
+    return 0 + num_eights(n//10)
+
 
 
 def digit_distance(n):
@@ -47,6 +56,11 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        return 0
+    if n < 100:
+        return abs(n//10 - n%10)
+    return digit_distance(n//10) + abs((n//10)%10 - n%10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -72,6 +86,16 @@ def interleaved_sum(n, odd_func, even_func):
     """
     "*** YOUR CODE HERE ***"
 
+    def evendo(func, m):
+        if m == n:
+            return func(m)
+        return func(m) + odddo(odd_func, m+1)
+    def odddo(func, m):
+        if m == n:
+            return func(m)
+        return func(m) + evendo(even_func, m+1)
+    return odddo(odd_func, 1)
+
 
 def next_smaller_dollar(bill):
     """Returns the next smaller bill in order."""
@@ -85,6 +109,8 @@ def next_smaller_dollar(bill):
         return 5
     elif bill == 5:
         return 1
+    elif bill == 1:
+        return 0
 
 def count_dollars(total):
     """Return the number of ways to make change.
@@ -107,6 +133,17 @@ def count_dollars(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def count_partitions(n, m):
+        """Count the ways to partition n using parts up to m."""
+        if n == 0:
+            return 1
+        elif n < 0:
+            return 0
+        elif m == 0:
+            return 0
+        else:
+            return count_partitions(n-m, m) + count_partitions(n, next_smaller_dollar(m))
+    return count_partitions(total, 100)
 
 
 def next_larger_dollar(bill):
@@ -121,6 +158,8 @@ def next_larger_dollar(bill):
         return 50
     elif bill == 50:
         return 100
+    elif bill == 100:
+        return 0
 
 def count_dollars_upward(total):
     """Return the number of ways to make change using bills.
@@ -143,6 +182,17 @@ def count_dollars_upward(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def count_partitions(n, m):
+        """Count the ways to partition n using parts up to m."""
+        if n == 0:
+            return 1
+        elif n < 0:
+            return 0
+        elif m == 0:
+            return 0
+        else:
+            return count_partitions(n-m, m) + count_partitions(n, next_larger_dollar(m))
+    return count_partitions(total, 1)
 
 
 def print_move(origin, destination):
@@ -178,6 +228,13 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+        return
+    move_stack(n-1, start, 6-start-end)
+    print_move(start, end)
+    move_stack(n-1, 6-start-end, end)
+    
 
 
 from operator import sub, mul
@@ -193,5 +250,5 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f: f(f))(lambda f: lambda x: 1 if x == 0 else x * f(f)(x - 1))
 
