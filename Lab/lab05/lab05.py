@@ -108,6 +108,20 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    count = 0
+    comp = None
+    try:
+        while True:
+            item = t.__next__()
+            if comp == item:
+                count += 1
+            else:
+                count = 0
+            comp = item
+            if count == k-1:
+                return comp
+    except StopIteration:
+        pass
 
 
 def sprout_leaves(t, leaves):
@@ -144,6 +158,12 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return tree(label(t), [tree(l) for l in leaves])
+    else:
+        return tree(label(t), [sprout_leaves(b, leaves) for b in branches(t)])
+
+
 
 
 def partial_reverse(s, start):
@@ -159,6 +179,9 @@ def partial_reverse(s, start):
     [1, 2, 7, 6, 5, 3, 4]
     """
     "*** YOUR CODE HERE ***"
+    a = s[:start] + s[len(s):start-1:-1]
+    s.clear()
+    s.extend(a)
 
 
 
